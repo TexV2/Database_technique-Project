@@ -1,0 +1,48 @@
+DROP TABLE IF EXISTS Infrastructure;
+DROP TABLE IF EXISTS Contractor;
+DROP TABLE IF EXISTS Assignment;
+DROP TABLE IF EXISTS MaintenanceLog;
+
+CREATE TABLE Infrastructure(
+  infrastructure_id INT AUTO_INCREMENT,
+  type VARCHAR(50) NOT NULL,
+  location VARCHAR(100) NOT NULL,
+  install_date DATE NOT NULL,
+  last_inspection DATE NOT NULL,
+  state VARCHAR(50) NOT NULL,
+  PRIMARY KEY(infrastructure_id)
+);
+
+CREATE TABLE Contractor(
+  contractor_id INT AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  field VARCHAR(100) NOT NULL,
+  cost VARCHAR(50) NOT NULL,
+  PRIMARY KEY(contractor_id)
+);
+
+CREATE TABLE Assignment(
+  assignment_id INT AUTO_INCREMENT,
+  infrastructure_id INT,
+  contractor_id INT,
+  task_type VARCHAR(100) NOT NULL,
+  projected_cost INT NOT NULL,
+  projected_start_date DATE NOT NULL,
+  projected_end_date DATE NOT NULL,
+  PRIMARY KEY(assignment_id),
+  FOREIGN KEY(infrastructure_id) REFERENCES Infrastructure(infrastructure_id),
+  FOREIGN KEY(contractor_id) REFERENCES Contractor(contractor_id)
+);
+
+CREATE TABLE MaintenanceLog(
+  assignment_id INT,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  cost INT NOT NULL,
+  result VARCHAR(50) NOT NULL,
+  review VARCHAR(200) NOT NULL,
+  PRIMARY KEY(assignment_id),
+  FOREIGN KEY(assignment_id) REFERENCES Assignment(assignment_id)
+);
+
+  

@@ -73,7 +73,7 @@ def table_viewer(table, table_info):
     returner = ""
     match table:
         case "Infrastructure":
-            widest_id = 0
+            widest_id = 0 #Gets the widest entry of each column, will be used to know the minimum amount of space needed when formatting
             widest_type = 0
             widest_location = 0
             widest_install_date = 0
@@ -93,14 +93,14 @@ def table_viewer(table, table_info):
                 if len(state)>widest_state:
                     widest_state = len(state)
             returner = (
-                f"{'ID':<{len('id') + widest_id}}  "
+                f"{'ID':<{len('id') + widest_id}}  " #Formatting the header so that everything is properly aligned
                 f"{'Type':<{len('type') + widest_type}}  "
                 f"{'Location':<{len('location') + widest_location}}  "
                 f"{'Install date':<{len('install date') + widest_install_date}}  "
                 f"{'Last inspection':<{len('last inspection') + widest_last_inspection}}  "
                 f"State\n"
                 )
-            returner += "-"*(
+            returner += "-"*( #Just adds a "-----" divider between the header and the actual entries
                     (len('id') + widest_id) + 2 + 
                     (len('type') + widest_type) + 2 +
                     (len('location') + widest_location) + 2 +
@@ -108,7 +108,7 @@ def table_viewer(table, table_info):
                     (len('last inspection') + widest_last_inspection) + 2 +
                     len('State')
                 )
-            for id, type, location, install_date, last_inspection, state in table_info:
+            for id, type, location, install_date, last_inspection, state in table_info: #Actually adding the entries now with proper alignment
                 returner += f"\n{id:<{len('id') + widest_id}}  "
                 returner += f"{type:<{len('type') + widest_type}}  "
                 returner += f"{location:<{len('location') + widest_location}}  "
@@ -116,7 +116,7 @@ def table_viewer(table, table_info):
                 returner += f"{last_inspection:<{len('last inspection') + widest_last_inspection}}  "
                 returner += state
 
-        case "Contractor":
+        case "Contractor": #Very bad DRY, but idk how to do the for-loops since each table has a different amount of attributes to them
             widest_id = 0
             widest_name = 0
             widest_rating = 0

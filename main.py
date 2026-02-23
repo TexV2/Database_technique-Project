@@ -6,12 +6,12 @@ import main_helper as helper
 
 
 
-
-DB_NAME = "Example" #helper.sanitize_input("Example") #Can put whatever here of course, but this gets the message across
+#Names the database and tables
+DB_NAME = "Infrastructure Maintenance" #helper.sanitize_input("Example") #Can put whatever here of course, but this gets the message across
 TABLES = ["Infrastructure", "Contractor", "Assignment", "MaintenanceLog"]
 
 
-
+#Connects to the mySql database
 def get_connection():
     return mysql.connector.connect(
     host=os.getenv("DB_HOST"),
@@ -21,7 +21,7 @@ def get_connection():
     )
 
 
-
+#Creates the database and then selects it
 def db_setup(conn):
     cur = conn.cursor()
     cur.execute(f"CREATE DATABASE IF NOT EXISTS `{DB_NAME}` "
@@ -30,7 +30,7 @@ def db_setup(conn):
     cur.close()
 
 
-
+#Creates the database tables
 def schema_setup(conn):
     cur = conn.cursor()
     cur.execute(
@@ -97,14 +97,14 @@ def schema_setup(conn):
     
 
 
-
+#Initializes the database and then adds our dummy data
 def main_setup():
     conn = get_connection()
-    
+#Initializes the database
     db_setup(conn)
     schema_setup(conn)
     conn.commit()
-    
+#Adds dummy data
     cur = conn.cursor()
     for table in TABLES:
         cur.execute(f"SELECT 1 FROM {table} LIMIT 1") #Checks if a table has data in it
@@ -116,7 +116,7 @@ def main_setup():
         else:
             print(f"{table} already contains data — skipping")
             continue
-    
+#Prints tables
     for table in TABLES:
         print(f"{table}:")
         cur.execute(f"SELECT * FROM {table}")
@@ -126,7 +126,7 @@ def main_setup():
     cur.close()
     conn.close()
 
-
+#Just the menu
 def menu():
     end = False
     while not end:

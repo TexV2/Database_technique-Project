@@ -41,7 +41,7 @@ def schema_menu():
 
 def infrastructure_submenu(menu_choice):
     def DRY(method):
-        conn = main.get_connection()
+        conn = schema.get_connection()
         cur = conn.cursor()
         result, data = infrastructure.method_picker(method, cur)
         print()
@@ -95,16 +95,16 @@ def infrastructure_submenu(menu_choice):
 
 def contractor_submenu(menu_choice):
     def DRY(method):
-        conn = main.get_connection()
+        conn = schema.get_connection()
         cur = conn.cursor()
-        result, data = infrastructure.method_picker(method, cur)
+        result, data = contractors.method_picker(method, cur)
         print()
         if result == -1:
             print("Invalid input, please try again.")
         elif result == 0:
             print("No data was found.")
         elif result == 1:  
-            helper.print_tables(cur, "Infrastructure", f"{method} = {data}")
+            helper.print_tables(cur, "Contractor", f"{method} = {data}")
         cur.close()
         conn.close()
 
@@ -113,32 +113,16 @@ def contractor_submenu(menu_choice):
             case 3:
                 print("Choose search method:")
                 print("1) ID")
-                print("2) Type")
-                print("3) Location")
-                print("4) Install date")
-                print("5) Last inspection")
-                print("6) State")
+                print("2) Name")
                 print("b) Go back")
                 choice = input("--> ").lower().strip()
 
                 match choice:
                     case "1":
-                        DRY("infrastructure_id")
+                        DRY("Contractor_id")
                         return False
                     case "2":
-                        DRY("type")
-                        return False
-                    case "3":
-                        DRY("location")
-                        return False
-                    case "4":
-                        DRY("install_date")
-                        return False
-                    case "5":
-                        DRY("last_inspection")
-                        return False
-                    case "6":
-                        DRY("state")
+                        DRY("Name")
                         return False
                     case "b":
                         print("Going back to infrastructure menu. ")
@@ -220,6 +204,9 @@ def menu():
             case "2":
                 pass
                 skip = infrastructure_menu()
+            case "3":
+                pass
+                skip = contractor_menu()
             case "q":
                 print("Goodbye.")
                 return

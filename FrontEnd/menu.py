@@ -29,7 +29,7 @@ def schema_menu():
                 helper.print_tables(curr)
             case "b":
                 print ("Going back to main menu. ")
-                return
+                return True
             case _:
                 print("Invalid input, please try again.")  
         input("\nPress enter to continue...")
@@ -67,25 +67,25 @@ def infrastructure_submenu(menu_choice):
                 match choice:
                     case "1":
                         DRY("infrastructure_id")
-                        return
+                        return False
                     case "2":
                         DRY("type")
-                        return
+                        return False
                     case "3":
                         DRY("location")
-                        return
+                        return False
                     case "4":
                         DRY("install_date")
-                        return
+                        return False
                     case "5":
                         DRY("last_inspection")
-                        return
+                        return False
                     case "6":
                         DRY("state")
-                        return
+                        return False
                     case "b":
-                        print("Going back to main menu. ")
-                        return
+                        print("Going back to infrastructure menu. ")
+                        return True
                     case _:
                         print("Invalid input, please try again.")
         input("\nPress enter to continue...")
@@ -94,6 +94,7 @@ def infrastructure_submenu(menu_choice):
 
 def infrastructure_menu():
     while True:
+        skip = False
         print("\nChoose:")
         print("1) Show table")
         print("2) Add infrastructure")
@@ -108,19 +109,20 @@ def infrastructure_menu():
                 print()
                 helper.print_tables(cur, "Infrastructure")
             case "3":
-                infrastructure_submenu(3)
+                skip = infrastructure_submenu(3)
             case "b":
                 print ("Going back to main menu. ")
-                return
+                return True
             case _:
                 print("Invalid input, please try again.")
-        input("\nPress enter to continue...")
+        if not skip:
+            input("\nPress enter to continue...")
 
 
 
 def menu():
-    end = False
-    while not end:
+    while True:
+        skip = False
         print("\nChoose:")
         print("1) Schema commands ")
         print("2) Infrastructure commands ")
@@ -129,16 +131,17 @@ def menu():
         print("5) Log commands")
         print("q) Quit")
         choice = input("--> ").lower().strip()
+        
         match choice:
             case "1":
-                schema_menu()
+                skip = schema_menu()
             case "2":
                 pass
-                infrastructure_menu()
+                skip = infrastructure_menu()
             case "q":
                 print("Goodbye.")
-                end = True
+                return
             case _:
                 print("Invalid input, please try again.")
-        if not end:
+        if not skip:
             input("\nPress enter to continue...")

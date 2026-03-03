@@ -38,29 +38,63 @@ def schema_menu():
         if not end:    
             input("\nPress enter to continue...")
 
+
+
 def infrastructure_submenu(menu_choice):
+    def DRY(method):
+        end = False
+        conn = main.get_connection()
+        cur = conn.cursor()
+        result, data = infrastructure.method_picker(method, cur)
+        print()
+        if result == -1:
+            print("Invalid input, please try again.")
+        elif result == 0:
+            print("No data was found.")
+        elif result == 1:  
+            helper.print_tables(cur, "Infrastructure", f"{method} = {data}")
+            end = True
+        cur.close()
+        conn.close()
+        return end
+
     end = False
     while not end:
         match menu_choice:
             case 3:
                 print("Choose search method:")
                 print("1) ID")
-                print("2) Location")
-                print("3) Install date")
-                print("4) Last inspection")
-                print("5) State")
+                print("2) Type")
+                print("3) Location")
+                print("4) Install date")
+                print("5) Last inspection")
+                print("6) State")
                 print("b) Go back")
                 choice = input("--> ").lower().strip()
+
                 match choice:
                     case "1":
-                        input("Enter the ID: ").lower().strip()
+                        end = DRY("infrastructure_id")
+                    case "2":
+                        end = DRY("type")
+                    case "3":
+                        end = DRY("location")
+                    case "4":
+                        end = DRY("install_date")
+                    case "5":
+                        end = DRY("last_inspection")
+                    case "6":
+                        end = DRY("state")
+                    case "b":
+                        print("Going back to main menu. ")
+                        end = True
                     case _:
-
-
-
+                        print("Invalid input, please try again.")
 
         if not end:
             input("Press enter to continue...")
+
+
 
 def infrastructure_menu():
     print()
@@ -89,6 +123,8 @@ def infrastructure_menu():
 
         if not end:
             input("\nPress enter to continue...")
+
+
 
 def menu():
     end = False

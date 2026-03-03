@@ -1,9 +1,11 @@
-import main
+import main #Unnecessary?
 from BackEnd import infrastructure as infrastructure
 from BackEnd import contractors as contractors
 from BackEnd import assignments as assignments
 from BackEnd import log as log
 from BackEnd import schema as schema
+from BackEnd import helper as helper 
+
 
 def schema_menu():
     end = False
@@ -25,7 +27,7 @@ def schema_menu():
             case "3":
                 conn = main.get_connection()
                 curr = conn.cursor()
-                main.print_tables(curr)
+                helper.print_tables(curr)
             case "4":
                 print ("Going back to main menu. ")
                 end = True
@@ -48,7 +50,9 @@ def infrastructure_menu():
         choice = input("--> ").lower().strip()
         match choice:
             case "1":
-                
+                conn = main.get_connection()
+                cur = conn.cursor()
+                helper.print_tables(cur, "Infrastructure")
             case "6":
                 print ("Going back to main menu. ")
                 end = True
@@ -73,6 +77,7 @@ def menu():
             case "1":
                 schema_menu()
             case "2":
+                pass
                 infrastructure_menu()
             case "q":
                 print("Goodbye.")

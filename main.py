@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import mysql.connector
-from BackEnd import main_helper as helper 
+from BackEnd import helper as helper 
 from FrontEnd import menu
 
 
@@ -101,16 +101,7 @@ def schema_setup(conn):
     
     conn.commit()
     cur.close()
-    
 
-def print_tables(cur):
-    #Prints tables
-    for table in TABLES:
-        print(f"{table}:")
-        cur.execute(f"SELECT * FROM {table}")
-        table_info = cur.fetchall()
-        print(helper.table_viewer(table, table_info))
-        print("\n\n\n")
 
 #Initializes the database and then adds our dummy data
 def main_setup(dummy_data = True):
@@ -133,7 +124,7 @@ def main_setup(dummy_data = True):
                 print(f"{table} already contains data — skipping")
                 continue
         #Prints the tables
-        print_tables(cur)
+        helper.print_tables(cur)
     cur.close()
     conn.close()
 

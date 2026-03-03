@@ -1,4 +1,6 @@
 
+TABLES = ["Infrastructure", "Contractor", "Assignment", "MaintenanceLog"]
+
 def sanitize_input(inp, no_spaces = False):
     inp = inp.strip()
     banned_symbols = [";", "'", '"', "`", "#", "=", "%", "@", "(", ")"]
@@ -9,7 +11,21 @@ def sanitize_input(inp, no_spaces = False):
         last_char = char
     return True
 
-
+def print_tables(cur, table_name = None):
+    #Prints tables
+    if table_name is not None:
+        print(f"{table_name}:")
+        cur.execute(f"SELECT * FROM {table_name}")
+        table_info = cur.fetchall()
+        print(table_viewer(table_name, table_info))
+        print("\n\n\n")
+    else:
+        for table in TABLES:
+            print(f"{table}:")
+            cur.execute(f"SELECT * FROM {table}")
+            table_info = cur.fetchall()
+            print(table_viewer(table, table_info))
+            print("\n\n\n")
 
 def basic_values(table):
     match table:

@@ -123,8 +123,6 @@ def main_setup(dummy_data = True):
     cur = conn.cursor()
     if dummy_data:
         for table in TABLES:
-            print(table)
-        for table in TABLES:
             cur.execute(f"SELECT 1 FROM {table} LIMIT 1") #Checks if a table has data in it
             has_rows = cur.fetchone() is not None
             if not has_rows:
@@ -146,6 +144,12 @@ def get_name():
 def main():
     load_dotenv()
     
+    conn = get_connection(use_db=False) #Dropping database to prevent dummy data corruption
+    cur = conn.cursor()
+    cur.execute(f"DROP DATABASE IF EXISTS `{DB_NAME}`")
+    cur.close()
+    conn.close()
+
     main_setup()
     menu.menu()
 

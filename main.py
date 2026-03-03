@@ -8,7 +8,7 @@ from FrontEnd import menu
 
 
 #Names the database and tables
-DB_NAME = "Infrastructure Maintenance" #helper.sanitize_input("Example", True) #Can put whatever here of course, but this gets the message across
+DB_NAME = "InfrastructureMaintenance" #helper.sanitize_input("Example", True) #Can put whatever here of course, but this gets the message across
 TABLES = ["Infrastructure", "Contractor", "Assignment", "MaintenanceLog"]
 
 
@@ -103,7 +103,7 @@ def schema_setup(conn):
     cur.close()
     
 
-def print_tables(cur, conn):
+def print_tables(cur):
     #Prints tables
     for table in TABLES:
         print(f"{table}:")
@@ -123,6 +123,8 @@ def main_setup(dummy_data = True):
     cur = conn.cursor()
     if dummy_data:
         for table in TABLES:
+            print(table)
+        for table in TABLES:
             cur.execute(f"SELECT 1 FROM {table} LIMIT 1") #Checks if a table has data in it
             has_rows = cur.fetchone() is not None
             if not has_rows:
@@ -133,7 +135,7 @@ def main_setup(dummy_data = True):
                 print(f"{table} already contains data — skipping")
                 continue
         #Prints the tables
-        print_tables(cur, conn)
+        print_tables(cur)
     cur.close()
     conn.close()
 

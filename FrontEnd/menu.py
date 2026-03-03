@@ -8,10 +8,8 @@ from BackEnd import helper as helper
 
 
 def schema_menu():
-    print()
-    end = False
-    while not end:
-        print ("Choose: ")
+    while True:
+        print ("\nChoose: ")
         print ("1) Drop all tables") #Unnecessary?
         print ("2) Reset all tables")
         print ("3) Show all tables")
@@ -31,18 +29,15 @@ def schema_menu():
                 helper.print_tables(curr)
             case "b":
                 print ("Going back to main menu. ")
-                end = True
+                return
             case _:
-                print("Invalid input, please try again.")
-
-        if not end:    
-            input("\nPress enter to continue...")
+                print("Invalid input, please try again.")  
+        input("\nPress enter to continue...")
 
 
 
 def infrastructure_submenu(menu_choice):
     def DRY(method):
-        end = False
         conn = main.get_connection()
         cur = conn.cursor()
         result, data = infrastructure.method_picker(method, cur)
@@ -53,13 +48,10 @@ def infrastructure_submenu(menu_choice):
             print("No data was found.")
         elif result == 1:  
             helper.print_tables(cur, "Infrastructure", f"{method} = {data}")
-            end = True
         cur.close()
         conn.close()
-        return end
 
-    end = False
-    while not end:
+    while True:
         match menu_choice:
             case 3:
                 print("Choose search method:")
@@ -74,33 +66,35 @@ def infrastructure_submenu(menu_choice):
 
                 match choice:
                     case "1":
-                        end = DRY("infrastructure_id")
+                        DRY("infrastructure_id")
+                        return
                     case "2":
-                        end = DRY("type")
+                        DRY("type")
+                        return
                     case "3":
-                        end = DRY("location")
+                        DRY("location")
+                        return
                     case "4":
-                        end = DRY("install_date")
+                        DRY("install_date")
+                        return
                     case "5":
-                        end = DRY("last_inspection")
+                        DRY("last_inspection")
+                        return
                     case "6":
-                        end = DRY("state")
+                        DRY("state")
+                        return
                     case "b":
                         print("Going back to main menu. ")
-                        end = True
+                        return
                     case _:
                         print("Invalid input, please try again.")
-
-        if not end:
-            input("Press enter to continue...")
+        input("\nPress enter to continue...")
 
 
 
 def infrastructure_menu():
-    print()
-    end = False
-    while not end:
-        print("Choose:")
+    while True:
+        print("\nChoose:")
         print("1) Show table")
         print("2) Add infrastructure")
         print("3) More information about a specific infrastructure")
@@ -117,19 +111,17 @@ def infrastructure_menu():
                 infrastructure_submenu(3)
             case "b":
                 print ("Going back to main menu. ")
-                end = True
+                return
             case _:
                 print("Invalid input, please try again.")
-
-        if not end:
-            input("\nPress enter to continue...")
+        input("\nPress enter to continue...")
 
 
 
 def menu():
     end = False
     while not end:
-        print("Choose:")
+        print("\nChoose:")
         print("1) Schema commands ")
         print("2) Infrastructure commands ")
         print("3) Contractor commands ")
@@ -148,6 +140,5 @@ def menu():
                 end = True
             case _:
                 print("Invalid input, please try again.")
-
         if not end:
             input("\nPress enter to continue...")

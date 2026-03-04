@@ -24,6 +24,31 @@ def method_picker(method, cur):
         return 1, data
     return 0, data
 
+def remove_infrastructure(ID):
+    conn = schema.get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        DELETE FROM MaintenanceLog 
+        WHERE assignment_id IN (
+            SELECT assignment_id FROM Assignment 
+            WHERE infrastructure_id = %s
+        )
+    """, (ID,))
+
+    cur.execute(
+        "DELETE FROM Assignment WHERE infrastructure_id = %s", 
+        (ID,)
+    )
+    cur.execute(
+        "DELETE FROM Infrastructure WHERE infrastructure_id = %s", 
+        (ID,)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+    print("Infrastructure and related assignments/logs have been deleted")
+    return
+
 def update_infrastructure():
     print("Enter the ID of the infrastructure you would like to update")
     ID = input("--> ").lower()

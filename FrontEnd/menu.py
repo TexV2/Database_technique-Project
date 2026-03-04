@@ -61,6 +61,14 @@ def infrastructure_submenu(menu_choice):
             case 4:
                 infrastructure.update_infrastructure()
                 return True
+            case 5:
+                print("Enter the ID of the infrastructure you want to remove, or enter b) if you want to go back")
+                print("Removing a infrastructure will remove related assignments and logs")
+                choice = input("--> ").lower()
+                if choice == "b":
+                    return True
+                else:
+                    infrastructure.remove_infrastructure(choice)
         input("\nPress enter to continue...")
 
 def contractor_submenu(menu_choice):
@@ -92,6 +100,14 @@ def contractor_submenu(menu_choice):
             case 4:
                 contractors.update_contractor()
                 return True
+            case 5:
+                print("Enter the ID of the contractor you want to remove, or enter b) if you want to go back")
+                print("Removing a contractor will remove related assignments and logs")
+                choice = input("--> ").lower()
+                if choice == "b":
+                    return True
+                else:
+                    contractors.remove_contractor(choice)
         input("\nPress enter to continue...")
 
 def infrastructure_menu():
@@ -102,6 +118,7 @@ def infrastructure_menu():
         print("2) Add infrastructure")
         print("3) More information about a specific infrastructure")
         print("4) Update specific infrastructure")
+        print("5) Remove specific infrastructure")
         print("b) Go back")
         choice = input("--> ").lower().strip()
         match choice:
@@ -116,6 +133,8 @@ def infrastructure_menu():
                 skip = infrastructure_submenu(3)
             case "4":
                 skip = infrastructure_submenu(4)
+            case "5":
+                skip = infrastructure_submenu(5)
             case "b":
                 print ("Going back to main menu. ")
                 return True
@@ -132,6 +151,7 @@ def contractor_menu():
         print("2) Add contractor")
         print("3) More information about a specific contractor")
         print("4) Update specific contractor")
+        print("5) Remove specific contractor")
         print("b) Go back")
         choice = input("--> ").lower().strip()
         match choice:
@@ -146,6 +166,8 @@ def contractor_menu():
                 skip = contractor_submenu(3)
             case "4":
                 skip = contractor_submenu(4)
+            case "5":
+                skip = contractor_submenu(5)
             case "b":
                 print ("Going back to main menu. ")
                 return True

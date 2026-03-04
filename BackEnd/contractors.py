@@ -23,6 +23,31 @@ def method_picker(method, cur):
         return 1, data
     return 0, data
 
+def remove_contractor(ID):
+    conn = schema.get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        DELETE FROM MaintenanceLog 
+        WHERE assignment_id IN (
+            SELECT assignment_id FROM Assignment 
+            WHERE contractor_id = %s
+        )
+    """, (ID,))
+
+    cur.execute(
+        "DELETE FROM Assignment WHERE contractor_id = %s", 
+        (ID,)
+    )
+    cur.execute(
+        "DELETE FROM Contractor WHERE contractor_id = %s", 
+        (ID,)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+    print("Contractor and related assignments/logs have been deleted")
+    return
+
 def add_contractor():
     print("What is the name of your contractor?")
     name = input("--> ")

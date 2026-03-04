@@ -1,4 +1,3 @@
-
 TABLES = ["Infrastructure", "Contractor", "Assignment", "MaintenanceLog"]
 
 def sanitize_input(inp, no_spaces = False):

@@ -71,8 +71,45 @@ def infrastructure_submenu(menu_choice):
                     infrastructure.remove_infrastructure(choice)
         input("\nPress enter to continue...")
 
-def contractor_submenu(menu_choice):
+def assignment_submenu(menu_choice):
 
+    while True:
+        match menu_choice:
+            case 2:
+                assignments.add_assignment()
+                return True
+            case 3:
+                assignments.view_assignment_between_dates()
+                input("Press enter to continue")
+                return True
+            case 4:
+                print("Choose search method:")
+                print("1) ID")
+                print("b) Go back")
+                choice = input("--> ").lower().strip()
+                match choice:
+                    case "1":
+                        assignments.DRY("assignment_id")
+                        return False
+                    case "b":
+                        print("Going back to assignment menu. ")
+                        return True
+                    case _:
+                        print("Invalid input, please try again.")
+            case 5:
+                assignments.update_assignment()
+                return True
+            case 6:
+                print("Enter the ID of the assignment you want to remove, or enter b) if you want to go back")
+                print("Removing a assignment will remove related logs")
+                choice = input("--> ").lower()
+                if choice == "b":
+                    return True
+                else:
+                    assignments.remove_assignment(choice)
+        input("\nPress enter to continue...")
+
+def contractor_submenu(menu_choice):
     while True:
         match menu_choice:
             case 2:
@@ -84,7 +121,6 @@ def contractor_submenu(menu_choice):
                 print("2) Name")
                 print("b) Go back")
                 choice = input("--> ").lower().strip()
-
                 match choice:
                     case "1":
                         contractors.DRY("Contractor_id")
@@ -176,7 +212,37 @@ def contractor_menu():
         if not skip:
             input("\nPress enter to continue...")
 
-
+def assignment_menu():
+    while True:
+        skip = False
+        print("\n Choose:")
+        print("1) View assignments")
+        print("2) Add assignment")
+        print("3) View assignments ongoing during certain dates")
+        print("4) View specific assignment")
+        print("5) Update assignment")
+        print("6) Remove assignment")
+        print("b) Go Back")
+        choice = input("--> ").lower().strip()
+        match choice:
+            case "1":
+                conn = schema.get_connection()
+                cur = conn.cursor()
+                print()
+                helper.print_tables(cur, "Assignment")
+            case "2":
+                skip = assignment_submenu(2)
+            case "3":
+                skip = assignment_submenu(3)
+            case "4":
+                skip = assignment_submenu(4)
+            case "5":
+                skip = assignment_submenu(5)
+            case "6":
+                skip = assignment_submenu(6)
+            case "b":
+                print("Going back to the main menu")
+                return True
 
 
 def menu():
@@ -195,11 +261,11 @@ def menu():
             case "1":
                 skip = schema_menu()
             case "2":
-                pass
                 skip = infrastructure_menu()
             case "3":
-                pass
                 skip = contractor_menu()
+            case "4":
+                skip = assignment_menu()
             case "q":
                 print("Goodbye.")
                 return

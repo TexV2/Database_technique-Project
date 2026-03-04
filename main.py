@@ -8,7 +8,5 @@ def main():
     schema.main_setup()
     menu.menu()
 
-
-
 if __name__ == "__main__":
     main()

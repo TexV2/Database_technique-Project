@@ -62,7 +62,7 @@ def update_infrastructure():
     conn = schema.get_connection()
     cur = conn.cursor()
     cur.execute(
-            f"UPDATE Infrastructure SET {column} = %s WHERE infrastructure_id =%s ",
+            f"UPDATE Infrastructure SET `{column}` = %s WHERE infrastructure_id =%s ",
             (new_value, ID)
         )
     conn.commit()

@@ -78,7 +78,7 @@ def update_contractor():
     conn = schema.get_connection()
     cur = conn.cursor()
     cur.execute(
-            f"UPDATE Contractor SET {column} = %s WHERE contractor_id =%s ",
+            f"UPDATE Contractor SET `{column}` = %s WHERE contractor_id =%s ",
             (new_value, ID)
         )
     conn.commit()

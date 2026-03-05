@@ -31,7 +31,7 @@ def schema_setup(conn):
         CREATE TABLE IF NOT EXISTS Contractor(
             contractor_id INT AUTO_INCREMENT,
             name VARCHAR(100) NOT NULL,
-            rating DECIMAL(2,1),
+            rating INT NOT NULL,
             field VARCHAR(100) NOT NULL,
             cost VARCHAR(50) NOT NULL,
             PRIMARY KEY(contractor_id)

@@ -109,6 +109,42 @@ def assignment_submenu(menu_choice):
                     assignments.remove_assignment(choice)
         input("\nPress enter to continue...")
 
+def log_submenu(menu_choice):
+    while True:
+        match menu_choice:
+            case 2:
+                log.add_log()
+                return True
+            case 3:
+                log.view_log_between_dates()
+                input("Press enter to continue")
+                return True
+            case 4:
+                print("Choose search method:")
+                print("1) ID")
+                print("b) Go back")
+                choice = input("--> ").lower().strip()
+                match choice:
+                    case "1":
+                        log.DRY("assignment_id")
+                        return False
+                    case "b":
+                        print("Going back to assignment menu. ")
+                        return True
+                    case _:
+                        print("Invalid input, please try again.")
+            case 5:
+                log.update_log()
+                return True
+            case 6:
+                print("Enter the assignment ID of the log you want to remove, or enter b) if you want to go back")
+                choice = input("--> ").lower()
+                if choice == "b":
+                    return True
+                else:
+                    log.remove_log(choice)
+        input("\nPress enter to continue...")
+
 def contractor_submenu(menu_choice):
     while True:
         match menu_choice:
@@ -171,6 +207,42 @@ def infrastructure_menu():
                 skip = infrastructure_submenu(4)
             case "5":
                 skip = infrastructure_submenu(5)
+            case "b":
+                print ("Going back to main menu. ")
+                return True
+            case _:
+                print("Invalid input, please try again.")
+        if not skip:
+            input("\nPress enter to continue...")
+
+def log_menu():
+    while True:
+        skip = False
+        print("\nChoose:")
+        print("1) Show table")
+        print("2) Add log")
+        print("3) View logs between two dates")
+        print("4) More information about a specific log")
+        print("5) Update log")
+        print("6) Remove specific log")
+        print("b) Go back")
+        choice = input("--> ").lower().strip()
+        match choice:
+            case "1":
+                conn = schema.get_connection()
+                cur = conn.cursor()
+                print()
+                helper.print_tables(cur, "MaintenanceLog")
+            case "2":
+                skip = log_submenu(2)
+            case "3":
+                skip = log_submenu(3)
+            case "4":
+                skip = log_submenu(4)
+            case "5":
+                skip = log_submenu(5)
+            case "6":
+                skip = log_submenu(6)
             case "b":
                 print ("Going back to main menu. ")
                 return True
@@ -266,6 +338,8 @@ def menu():
                 skip = contractor_menu()
             case "4":
                 skip = assignment_menu()
+            case "5":
+                skip = log_menu()
             case "q":
                 print("Goodbye.")
                 return

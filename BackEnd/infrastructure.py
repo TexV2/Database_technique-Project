@@ -62,16 +62,21 @@ def update_infrastructure():
     accepted_input = True
     print("Enter the ID of the infrastructure you would like to update")
     ID = input("--> ").strip()
-    accepted_input &= helper.sanitize_input(ID)
+    accepted_input &= helper.sanitize_input(ID, numbers_only=True)
     print("Enter what column you would like to edit")
     column = input("--> ").lower().strip()
     accepted_input &= helper.sanitize_input(column)
     if column not in VALID_COLUMNS:
         print(f"Invalid column: {column}")
         return
+    
     print("Enter the new value")
     new_value = input("--> ").strip()
-    accepted_input &= helper.sanitize_input(new_value)
+    if column == "install_date" or column == "last_inspected":
+        accepted_input &= helper.sanitize_input(new_value, date_mode=True)
+    else:
+        accepted_input &= helper.sanitize_input(new_value)
+    
     if accepted_input:
         conn = schema.get_connection()
         cur = conn.cursor()
@@ -99,10 +104,10 @@ def add_infrastructure():
     accepted_input &= helper.sanitize_input(location)
     print("When was your infrastructure installed?")
     installation_date = input("--> ").strip()
-    accepted_input &= helper.sanitize_input(installation_date)
+    accepted_input &= helper.sanitize_input(installation_date, date_mode=True)
     print("When was your infrastructure last inspected?")
     last_inspection = input("--> ").strip()
-    accepted_input &= helper.sanitize_input(last_inspection)
+    accepted_input &= helper.sanitize_input(last_inspection, date_mode=True)
     print("What is the state of your infrastructure? ")
     state = input("--> ").strip()
     accepted_input &= helper.sanitize_input(state)
@@ -131,7 +136,6 @@ def check_rows(method, data, cur):
     if found_rows:
         return True
     return False
-
 
 
 def DRY(method):

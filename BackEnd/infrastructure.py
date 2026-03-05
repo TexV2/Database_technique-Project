@@ -1,6 +1,6 @@
 from BackEnd import schema as schema
 from BackEnd import helper as helper
-VALID_COLUMNS = {"type", "location", "install_date", "state", "last_inspection"}
+VALID_COLUMNS = {"type", "location", "state", "last_inspection"}
 
 
 
@@ -73,7 +73,7 @@ def update_infrastructure():
     cur.close()
     conn.close()
 
-    print("Enter what column you would like to edit (type, location, install_date, last_inspection, state)")
+    print("Enter what column you would like to edit (type, location, last_inspection, state)")
     column = input("--> ").lower().strip()
     accepted_input &= helper.sanitize_input(column)
     if column not in VALID_COLUMNS:

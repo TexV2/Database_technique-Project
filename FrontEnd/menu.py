@@ -84,8 +84,7 @@ def assignment_submenu(menu_choice):
     while True:
         match menu_choice:
             case 2:
-                assignments.add_assignment()
-                return True
+                return assignments.add_assignment()
             case 3:
                 assignments.view_assignment_between_dates()
                 input("Press enter to continue...")
@@ -105,11 +104,9 @@ def assignment_submenu(menu_choice):
                     case _:
                         print("Invalid input, please try again.")
             case 5:
-                assignments.update_assignment()
-                return True
+                return assignments.update_assignment()
             case 6:
-                print("Enter the ID of the infrastructure you want to remove (enter 'b' to go back).")
-                print("Removing a infrastructure will remove related assignments and logs.")
+                print("Enter the ID of the assignment you want to remove (enter 'b' to go back).")
                 choice = input("--> ").lower().strip()
                 if choice == "b":
                     return True
@@ -350,6 +347,8 @@ def assignment_menu():
             case "b":
                 print("Going back to the main menu")
                 return True
+        if not skip:
+            input("\nPress enter to continue...")
 
 
 def menu():

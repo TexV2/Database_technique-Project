@@ -33,6 +33,8 @@ def method_picker(method, cur):
         return 1, data
     return 0, data
 
+
+
 def remove_assignment(ID):
     conn = schema.get_connection()
     cur = conn.cursor()
@@ -47,8 +49,10 @@ def remove_assignment(ID):
     conn.commit()
     cur.close()
     conn.close()
-    print("Assignment and related logs have been deleted")
+    print("Assignment has been deleted")
     return
+
+
 
 def update_assignment():
     accepted_input = True
@@ -66,12 +70,12 @@ def update_assignment():
     cur.close()
     conn.close()
 
-    print("Enter what column you would like to edit")
+    print("Enter what column you would like to edit (task_type, projected_cost, projected_start_date, projected_end_date)")
     column = input("--> ").lower().strip()
     accepted_input &= helper.sanitize_input(column)
     if column not in VALID_COLUMNS:
         print(f"Invalid column: {column}")
-        return
+        return False
 
     print("Enter the new value")
     new_value = input("--> ").lower().strip()
@@ -93,9 +97,10 @@ def update_assignment():
         cur.close()
         conn.close()
         print("Row has been updated.")
+        return True
     else:
         print("You have entered invalid data, please try again later.")
-    return
+        return False
 
 
 
@@ -118,15 +123,32 @@ def view_assignment_between_dates():
         print("You have entered invalid data, please try again later.")
     return
 
+
+
 def add_assignment():
     accepted_input = True
 
     print("What is the ID of the contractor working on your assignment?")
     con_id = input("--> ").strip()
     accepted_input &= helper.sanitize_input(con_id, numbers_only=True)
+    conn = schema.get_connection()
+    cur = conn.cursor()
+    if not check_rows("contractor_id", con_id, cur):
+        print("Invalid ID, please try again later")
+        cur.close()
+        conn.close()
+        return False
     print("What is the ID of the infrastructure being worked on?")
     inf_id = input("--> ").strip()
     accepted_input &= helper.sanitize_input(inf_id, numbers_only=True)
+    if not check_rows("infrastructure_id", inf_id, cur):
+        print("Invalid ID, please try again later")
+        cur.close()
+        conn.close()
+        return False
+    cur.close()
+    conn.close()
+
     print("What type of work is being done?")
     type = input("--> ").strip()
     accepted_input &= helper.sanitize_input(type)
@@ -153,12 +175,16 @@ def add_assignment():
         print("You have entered invalid data, please try again later.")
         return False
 
+
+
 def check_rows(method, data, cur):
     cur.execute(f"SELECT 1 FROM Assignment WHERE {method} = {data} LIMIT 1")
     found_rows = cur.fetchone() is not None
     if found_rows:
         return True
     return False
+
+
 
 def DRY(method):
     conn = schema.get_connection()

@@ -62,12 +62,12 @@ def basic_values(table):
             return """
             INSERT INTO Contractor (name, rating, field, cost)
             VALUES
-                ('Urban Builders Co.', 4.5, 'Road Construction', 'expensive'),
-                ('Elevatech Ltd.', 4.0, 'Elevator Maintenance', 'moderate'),
-                ('PipeWorks Inc.', 3.8, 'Plumbing', 'moderate'),
-                ('Bright Lights LLC', 4.2, 'Electrical', 'cheap'),
-                ('BridgeCare Solutions', 4.6, 'Bridge Maintenance', 'expensive'),
-                ('SewerFix Corp.', 3.9, 'Sewer & Waste Management', 'moderate')
+                ('Urban Builders Co.', 9, 'Road Construction', 'expensive'),
+                ('Elevatech Ltd.', 8, 'Elevator Maintenance', 'moderate'),
+                ('PipeWorks Inc.', 6, 'Plumbing', 'moderate'),
+                ('Bright Lights LLC', 8, 'Electrical', 'cheap'),
+                ('BridgeCare Solutions', 7, 'Bridge Maintenance', 'expensive'),
+                ('SewerFix Corp.', 6, 'Sewer & Waste Management', 'moderate')
             """
         
         case "Assignment":

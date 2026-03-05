@@ -79,7 +79,7 @@ def assignment_submenu(menu_choice):
                 return True
             case 3:
                 assignments.view_assignment_between_dates()
-                input("Press enter to continue")
+                input("Press enter to continue...")
                 return True
             case 4:
                 print("Choose search method:")

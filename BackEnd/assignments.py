@@ -55,16 +55,22 @@ def update_assignment():
 
     print("Enter the ID of the assignment you would like to update")
     ID = input("--> ").strip()
-    accepted_input &= helper.sanitize_input(ID)
+    accepted_input &= helper.sanitize_input(ID, numbers_only=True)
     print("Enter what column you would like to edit")
     column = input("--> ").lower().strip()
     accepted_input &= helper.sanitize_input(column)
     if column not in VALID_COLUMNS:
         print(f"Invalid column: {column}")
         return
+
     print("Enter the new value")
     new_value = input("--> ").lower().strip()
-    accepted_input &= helper.sanitize_input(ID)
+    if column == "projected_start_date" or column == "projected_end_date":
+        accepted_input &= helper.sanitize_input(new_value, date_mode=True)
+    elif column == "projected_cost":
+        accepted_input &= helper.sanitize_input(new_value, numbers_only=True)
+    else:
+        accepted_input &= helper.sanitize_input(new_value)
 
     if accepted_input:
         conn = schema.get_connection()
@@ -81,30 +87,21 @@ def update_assignment():
         print("You have entered invalid data, please try again later.")
     return
 
+
+
 def view_assignment_between_dates():
     accepted_input = True
 
     print("What is the start date for the period you are looking for assignments in?")
     start_date = input("--> ").strip()
-    accepted_input &= helper.sanitize_input(start_date)
+    accepted_input &= helper.sanitize_input(start_date, date_mode=True)
     print("What is the end date for the period you are looking for assignments in?")
     end_date = input("--> ").strip()
-    accepted_input &= helper.sanitize_input(end_date)
+    accepted_input &= helper.sanitize_input(end_date, date_mode=True)
     if accepted_input:
         conn = schema.get_connection()
         cur = conn.cursor()
-        cur.execute(
-            """
-            SELECT * FROM Assignment
-            WHERE projected_start_date <= %s
-            AND projected_end_date >= %s
-        """,
-        (end_date, start_date)
-        )
-        rows = cur.fetchall()
-        print("ID  Infrastructure ID  Contractor ID  Task Type  Projected Cost  Projected Start Date    Projected End Date")
-        for row in rows:
-            print(f"{row[0]}, {row[1]}, {row[2]}, {row[3]}, {row[4]}, {row[5]}, {row[6]}")
+        helper.print_tables(cur, table_name="Assignment", where=f"projected_start_date >= '{start_date}' AND projected_end_date <= '{end_date}'")
         cur.close()
         conn.close()
     else:

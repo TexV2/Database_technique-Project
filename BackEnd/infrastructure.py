@@ -1,6 +1,6 @@
 from BackEnd import schema as schema
 from BackEnd import helper as helper
-VALID_COLUMNS = {"type", "location", "install_date", "state", "last_inspected"}
+VALID_COLUMNS = {"type", "location", "install_date", "state", "last_inspection"}
 
 
 
@@ -63,12 +63,22 @@ def update_infrastructure():
     print("Enter the ID of the infrastructure you would like to update")
     ID = input("--> ").strip()
     accepted_input &= helper.sanitize_input(ID, numbers_only=True)
-    print("Enter what column you would like to edit")
+    conn = schema.get_connection()
+    cur = conn.cursor()
+    if not check_rows("infrastructure_id", ID, cur):
+        print("Invalid ID, please try again later")
+        cur.close()
+        conn.close()
+        return False
+    cur.close()
+    conn.close()
+
+    print("Enter what column you would like to edit (type, location, install_date, last_inspection, state)")
     column = input("--> ").lower().strip()
     accepted_input &= helper.sanitize_input(column)
     if column not in VALID_COLUMNS:
         print(f"Invalid column: {column}")
-        return
+        return False
     
     print("Enter the new value")
     new_value = input("--> ").strip()
@@ -90,6 +100,7 @@ def update_infrastructure():
         print("Row has been updated")
     else:
         print("You have entered invalid data, please try again later.")
+    return False
 
 
 

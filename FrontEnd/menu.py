@@ -8,7 +8,7 @@ from BackEnd import helper as helper
 
 def schema_menu():
     while True:
-        print ("\nChoose: ")
+        print ("\nSchema Menu: ")
         print ("1) Reset all tables") #Unnecessary?
         print ("2) Show all tables")
         print ("b) Go back")
@@ -45,8 +45,9 @@ def infrastructure_submenu(menu_choice):
                 infrastructure.add_infrastructure()
                 return True
             case 3:
-                print("Choose search method:")
+                print("\nChoose search method:")
                 print("1) ID")
+                
                 print("b) Go back")
                 choice = input("--> ").lower().strip()
                 match choice:
@@ -59,16 +60,24 @@ def infrastructure_submenu(menu_choice):
                     case _:
                         print("Invalid input, please try again.")
             case 4:
-                infrastructure.update_infrastructure()
-                return True
+                return infrastructure.update_infrastructure()
             case 5:
-                print("Enter the ID of the infrastructure you want to remove, or enter b) if you want to go back")
-                print("Removing a infrastructure will remove related assignments and logs")
-                choice = input("--> ").lower()
+                print("Enter the ID of the infrastructure you want to remove (enter 'b' to go back).")
+                print("Removing a infrastructure will remove related assignments and logs.")
+                choice = input("--> ").lower().strip()
                 if choice == "b":
                     return True
                 else:
-                    infrastructure.remove_infrastructure(choice)
+                    print("Are you sure? y/n")
+                    double_check = input("--> ").lower().strip()
+                    if double_check[0] == "y":
+                        infrastructure.remove_infrastructure(choice)
+                        return False
+                    elif double_check[0] == "n":
+                        return True
+                    else:
+                        print("Invalid input, please try again later")
+                        return False
         input("\nPress enter to continue...")
 
 def assignment_submenu(menu_choice):
@@ -99,13 +108,22 @@ def assignment_submenu(menu_choice):
                 assignments.update_assignment()
                 return True
             case 6:
-                print("Enter the ID of the assignment you want to remove, or enter b) if you want to go back")
-                print("Removing a assignment will remove related logs")
-                choice = input("--> ").lower()
+                print("Enter the ID of the infrastructure you want to remove (enter 'b' to go back).")
+                print("Removing a infrastructure will remove related assignments and logs.")
+                choice = input("--> ").lower().strip()
                 if choice == "b":
                     return True
                 else:
-                    assignments.remove_assignment(choice)
+                    print("Are you sure? y/n")
+                    double_check = input("--> ").lower().strip()
+                    if double_check[0] == "y":
+                        assignments.remove_assignment(choice)
+                        return False
+                    elif double_check[0] == "n":
+                        return True
+                    else:
+                        print("Invalid input, please try again later")
+                        return False
         input("\nPress enter to continue...")
 
 def log_submenu(menu_choice):
@@ -136,12 +154,21 @@ def log_submenu(menu_choice):
                 log.update_log()
                 return True
             case 6:
-                print("Enter the assignment ID of the log you want to remove, or enter b) if you want to go back")
-                choice = input("--> ").lower()
+                print("Enter the ID of the maintenance log you want to remove (enter 'b' to go back).")
+                choice = input("--> ").lower().strip()
                 if choice == "b":
                     return True
                 else:
-                    log.remove_log(choice)
+                    print("Are you sure? y/n")
+                    double_check = input("--> ").lower().strip()
+                    if double_check[0] == "y":
+                        log.remove_log(choice)
+                        return False
+                    elif double_check[0] == "n":
+                        return True
+                    else:
+                        print("Invalid input, please try again later")
+                        return False
         input("\nPress enter to continue...")
 
 def contractor_submenu(menu_choice):
@@ -172,19 +199,28 @@ def contractor_submenu(menu_choice):
                 contractors.update_contractor()
                 return True
             case 5:
-                print("Enter the ID of the contractor you want to remove, or enter b) if you want to go back")
-                print("Removing a contractor will remove related assignments and logs")
-                choice = input("--> ").lower()
+                print("Enter the ID of the contractor you want to remove (enter 'b' to go back).")
+                print("Removing a contractor will remove related assignments and logs.")
+                choice = input("--> ").lower().strip()
                 if choice == "b":
                     return True
                 else:
-                    contractors.remove_contractor(choice)
+                    print("Are you sure? y/n")
+                    double_check = input("--> ").lower().strip()
+                    if double_check[0] == "y":
+                        contractors.remove_contractor(choice)
+                        return False
+                    elif double_check[0] == "n":
+                        return True
+                    else:
+                        print("Invalid input, please try again later")
+                        return False
         input("\nPress enter to continue...")
 
 def infrastructure_menu():
     while True:
         skip = False
-        print("\nChoose:")
+        print("\nInfrastructure Menu:")
         print("1) Show table")
         print("2) Add infrastructure")
         print("3) More information about a specific infrastructure")
@@ -217,7 +253,7 @@ def infrastructure_menu():
 def log_menu():
     while True:
         skip = False
-        print("\nChoose:")
+        print("\nAssignment Log Menu:")
         print("1) Show table")
         print("2) Add log")
         print("3) View logs between two dates")
@@ -253,7 +289,7 @@ def log_menu():
 def contractor_menu():
     while True:
         skip = False
-        print("\nChoose:")
+        print("\nContractor Menu:")
         print("1) Show table")
         print("2) Add contractor")
         print("3) More information about a specific contractor")
@@ -286,7 +322,7 @@ def contractor_menu():
 def assignment_menu():
     while True:
         skip = False
-        print("\n Choose:")
+        print("\nAssignment Menu:")
         print("1) View assignments")
         print("2) Add assignment")
         print("3) View assignments ongoing during certain dates")
@@ -319,7 +355,7 @@ def assignment_menu():
 def menu():
     while True:
         skip = False
-        print("\nChoose:")
+        print("\nMain Menu:")
         print("1) Schema commands ")
         print("2) Infrastructure commands ")
         print("3) Contractor commands ")

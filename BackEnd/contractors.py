@@ -2,7 +2,7 @@ from BackEnd import schema as schema
 from BackEnd import helper as helper
 
 
-VALID_COLUMNS = {"Name", "Rating", "Field", "Cost"}
+VALID_COLUMNS = {"name", "rating", "field", "cost"}
 
 
 def method_picker(method, cur):
@@ -77,7 +77,7 @@ def add_contractor():
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO Contractor (Name, Rating, Field, Cost) VALUES (%s, %s, %s, %s)",
-            (name, 0, field, price_range)
+            (name, 1, field, price_range)
         )
         conn.commit()
         cur.close()
@@ -96,8 +96,18 @@ def update_contractor():
     print("Enter the ID of the contractor you would like to update")
     ID = input("--> ").strip()
     accepted_input &= helper.sanitize_input(ID, numbers_only=True)
-    print("Enter what column you would like to edit")
-    column = input("--> ").strip()
+    conn = schema.get_connection()
+    cur = conn.cursor()
+    if not check_rows("contractor_id", ID, cur):
+        print("Invalid ID, please try again later")
+        cur.close()
+        conn.close()
+        return False
+    cur.close()
+    conn.close()
+
+    print("Enter what column you would like to edit (name, rating, field, cost)")
+    column = input("--> ").lower().strip()
     accepted_input &= helper.sanitize_input(column)
     if column not in VALID_COLUMNS:
         print(f"Invalid column: {column}")

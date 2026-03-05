@@ -56,6 +56,16 @@ def update_assignment():
     print("Enter the ID of the assignment you would like to update")
     ID = input("--> ").strip()
     accepted_input &= helper.sanitize_input(ID, numbers_only=True)
+    conn = schema.get_connection()
+    cur = conn.cursor()
+    if not check_rows("assignment_id", ID, cur):
+        print("Invalid ID, please try again later")
+        cur.close()
+        conn.close()
+        return False
+    cur.close()
+    conn.close()
+
     print("Enter what column you would like to edit")
     column = input("--> ").lower().strip()
     accepted_input &= helper.sanitize_input(column)

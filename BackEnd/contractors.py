@@ -98,7 +98,7 @@ def update_contractor():
     accepted_input &= helper.sanitize_input(ID, numbers_only=True)
     conn = schema.get_connection()
     cur = conn.cursor()
-    if not check_rows("contractor_id", ID, cur):
+    if accepted_input and not check_rows("contractor_id", ID, cur):
         print("Invalid ID, please try again later")
         cur.close()
         conn.close()

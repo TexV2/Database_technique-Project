@@ -1,5 +1,7 @@
 from BackEnd import schema as schema
 from BackEnd import helper as helper
+from BackEnd import infrastructure as infrastructure
+from BackEnd import contractors as contractor
 
 
 VALID_COLUMNS = {"task_type", "projected_cost", "projected_start_date", "projected_end_date"}
@@ -133,7 +135,7 @@ def add_assignment():
     accepted_input &= helper.sanitize_input(con_id, numbers_only=True)
     conn = schema.get_connection()
     cur = conn.cursor()
-    if not check_rows("contractor_id", con_id, cur):
+    if accepted_input and contractor.check_rows("contractor_id", con_id, cur):
         print("Invalid ID, please try again later")
         cur.close()
         conn.close()
@@ -141,7 +143,7 @@ def add_assignment():
     print("What is the ID of the infrastructure being worked on?")
     inf_id = input("--> ").strip()
     accepted_input &= helper.sanitize_input(inf_id, numbers_only=True)
-    if not check_rows("infrastructure_id", inf_id, cur):
+    if accepted_input and not infrastructure.check_rows("infrastructure_id", inf_id, cur):
         print("Invalid ID, please try again later")
         cur.close()
         conn.close()

@@ -42,8 +42,7 @@ def infrastructure_submenu(menu_choice):
     while True:
         match menu_choice:
             case 2:
-                infrastructure.add_infrastructure()
-                return True
+                return infrastructure.add_infrastructure()
             case 3:
                 print("\nChoose search method:")
                 print("1) ID")
@@ -127,8 +126,7 @@ def log_submenu(menu_choice):
     while True:
         match menu_choice:
             case 2:
-                log.add_log()
-                return True
+                return log.add_log()
             case 3:
                 log.view_log_between_dates()
                 input("Press enter to continue")
@@ -148,8 +146,7 @@ def log_submenu(menu_choice):
                     case _:
                         print("Invalid input, please try again.")
             case 5:
-                log.update_log()
-                return True
+                return log.update_log()
             case 6:
                 print("Enter the ID of the maintenance log you want to remove (enter 'b' to go back).")
                 choice = input("--> ").lower().strip()
@@ -172,8 +169,7 @@ def contractor_submenu(menu_choice):
     while True:
         match menu_choice:
             case 2:
-                contractors.add_contractor()
-                return True
+                return contractors.add_contractor()
             case 3:
                 print("Choose search method:")
                 print("1) ID")
@@ -193,8 +189,7 @@ def contractor_submenu(menu_choice):
                     case _:
                         print("Invalid input, please try again.")
             case 4:
-                contractors.update_contractor()
-                return True
+                return contractors.update_contractor()
             case 5:
                 print("Enter the ID of the contractor you want to remove (enter 'b' to go back).")
                 print("Removing a contractor will remove related assignments and logs.")

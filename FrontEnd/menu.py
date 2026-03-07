@@ -261,6 +261,16 @@ def contractor_submenu(menu_choice):
                     else:
                         print("Invalid input, please try again later")
                         return False
+            case 6:
+                print("Enter the ID of the contractor:")
+                ID = input("--> ").strip()
+                if helper.sanitize_input(ID, numbers_only=True):
+                    return contractors.count_num_contractor_jobs(ID)
+                else:
+                    print("Invalid input, please try again later.")
+                    return False
+            
+
         input("\nPress enter to continue...")
 
 
@@ -379,6 +389,7 @@ def contractor_menu():
         print("3) Search & Filter")
         print("4) Update Contractor")
         print("5) Remove Contractor")
+        print("6) Contractor Jobs")
         print("b) Go back")
         choice = input("--> ").lower().strip()
         match choice:
@@ -395,6 +406,8 @@ def contractor_menu():
                 skip = contractor_submenu(4)
             case "5":
                 skip = contractor_submenu(5)
+            case "6":
+                skip = contractor_submenu(6)
             case "b":
                 print ("Going back to main menu. ")
                 return True

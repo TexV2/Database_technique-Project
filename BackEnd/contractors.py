@@ -137,6 +137,51 @@ def update_contractor():
 
 
 
+def count_num_contractor_jobs(ID):
+    conn = schema.get_connection()
+    cur = conn.cursor()
+
+    cur.execute("DROP FUNCTION IF EXISTS CountNumContractorJobs")
+    conn.commit()
+    cur.execute("""
+                DELIMITER $$
+                CREATE FUNCTION CountNumContractorJobs(p_contractor_id INT)
+                RETURNS INT
+                DETERMINISTIC
+                BEGIN
+                    DECLARE checkIfIDExists INT;
+                    DECLARE numJobs INT;
+                    
+                    SELECT COUNT(*)
+                    INTO checkIfIDExists
+                    FROM Contractor
+                    WHERE contractor_id = p_contractor_id;
+                    
+                    IF checkIfIDExists != 1 THEN
+                        RETURN 0;
+                    ELSE
+                        SELECT COUNT(*)
+                        INTO numJobs
+                        FROM Assignment a
+                        INNER JOIN MaintenanceLog ml 
+                        ON a.assignment_id = ml.assignment_id AND a.contractor_id = p_contractor_id;
+                        RETURN numJobs;
+                    END IF;
+                END$$
+                DELIMITER ;
+                """)
+    conn.commit()
+
+    cur.execute(f"SELECT CountNumContractorJobs({ID})")
+    result = cur.fetchone()[0]
+    if result == 1:
+        print(f"The contractor has done {result} job in total")
+    else:
+        print(f"The contractor has done {result} jobs in total")
+    cur.close()
+    conn.close()
+    return False
+
 def check_rows(method, data, cur):
     cur.execute(f"SELECT 1 FROM Contractor WHERE {method} = {data} LIMIT 1")
     found_rows = cur.fetchone() is not None

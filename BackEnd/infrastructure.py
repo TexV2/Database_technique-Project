@@ -1,7 +1,8 @@
 from BackEnd import schema as schema
 from BackEnd import helper as helper
-VALID_COLUMNS = {"type", "location", "state", "last_inspection"}
 
+
+VALID_COLUMNS = {"type", "location", "state", "last_inspection"}
 
 
 def method_picker(method, cur):

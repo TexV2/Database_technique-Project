@@ -141,8 +141,6 @@ def count_num_contractor_jobs(ID):
     conn = schema.get_connection()
     cur = conn.cursor()
 
-    
-
     cur.execute(f"SELECT CountNumContractorJobs({ID})")
     result = cur.fetchone()[0]
     if result == 1:

@@ -201,3 +201,19 @@ def DRY(method):
         helper.print_tables(cur, "Assignment", f"{method} = {data}")
     cur.close()
     conn.close()
+
+def show_finished_assignments():
+    conn=schema.get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT a.*, m.*
+        FROM Assignment a
+        INNER JOIN MaintenanceLog m ON a.assignment_id = m.assignment_id
+        """ 
+    )
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+    cur.close()
+    conn.close()

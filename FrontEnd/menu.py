@@ -134,6 +134,10 @@ def assignment_submenu(menu_choice):
                     else:
                         print("Invalid input, please try again later")
                         return False
+            case 7:
+                assignments.show_finished_assignments()
+                input("Press enter to continue\n")
+                return True
         input("\nPress enter to continue...")
 
 
@@ -411,6 +415,7 @@ def assignment_menu():
         print("4) Search & Filter")
         print("5) Update Assignment")
         print("6) Remove Assignment")
+        print("7) Show finished Assignments")
         print("b) Go Back")
         choice = input("--> ").lower().strip()
         match choice:
@@ -429,6 +434,8 @@ def assignment_menu():
                 skip = assignment_submenu(5)
             case "6":
                 skip = assignment_submenu(6)
+            case "7":
+                skip = assignment_submenu(7)
             case "b":
                 print("Going back to the main menu")
                 return True

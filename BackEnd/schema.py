@@ -5,7 +5,10 @@ import mysql.connector
 #Names the database and tables
 DB_NAME = "InfrastructureMaintenance" #helper.sanitize_input("Example", True) #Can put whatever here of course, but this gets the message across
 TABLES = ["Infrastructure", "Contractor", "Assignment", "MaintenanceLog"]
-
+COLUMNS = [["ID", "Type", "Location", "Install date", "Last inspection", "State"], 
+           ["ID", "Name", "Rating", "Field", "Cost"],
+           ["ID", "Infrastructure ID", "Contractor ID", "Task type", "Projected cost", "Projected start date", "Projected end date"],
+           ["Assignment ID", "Start date", "End date", "Cost", "Result", "Review"]]
 def get_name():
     return DB_NAME
 
@@ -78,7 +81,7 @@ def schema_setup(conn):
     cur.close()
 
 def add_dummy_data(cur, conn):
-    for table in TABLES:
+    for i, table in enumerate(TABLES):
         cur.execute(f"SELECT 1 FROM {table} LIMIT 1") #Checks if a table has data in it
         has_rows = cur.fetchone() is not None
         if not has_rows:
@@ -88,8 +91,6 @@ def add_dummy_data(cur, conn):
         else:
             print(f"{table} already contains data — skipping")
             continue
-        #Prints the tables
-        helper.print_tables(cur)
 
 def advanced_mysql(cur, conn):
     cur.execute("DROP TRIGGER IF EXISTS UpdateLastInspection") #Infrastructure last_inspection updates to current date if state changes

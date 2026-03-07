@@ -5,7 +5,7 @@ from BackEnd import contractors as contractor
 
 
 VALID_COLUMNS = {"task_type", "projected_cost", "projected_start_date", "projected_end_date"}
-
+DISPLAY_COLUMNS =  ["ID", "Infrastructure ID", "Contractor ID", "Task type", "Projected cost", "Projected start date", "Projected end date"]
 
 
 def method_picker(method, cur):
@@ -118,7 +118,7 @@ def view_assignment_between_dates():
     if accepted_input:
         conn = schema.get_connection()
         cur = conn.cursor()
-        helper.print_tables(cur, table_name="Assignment", where=f"projected_start_date >= '{start_date}' AND projected_end_date <= '{end_date}'")
+        helper.print_tables(cur, DISPLAY_COLUMNS, table_name="Assignment", where=f"projected_start_date >= '{start_date}' AND projected_end_date <= '{end_date}'")
         cur.close()
         conn.close()
     else:
@@ -198,23 +198,15 @@ def DRY(method):
     elif result == 0:
         print("No data was found.")
     elif result == 1:  
-        helper.print_tables(cur, "Assignment", f"{method} = {data}")
+        helper.print_tables(cur, DISPLAY_COLUMNS, table_name="Assignment", where=f"{method} = {data}")
     cur.close()
     conn.close()
 
 def show_finished_assignments():
     conn=schema.get_connection()
     cur = conn.cursor()
-    cur.execute(
-        """
-        SELECT a.*, m.*
-        FROM Assignment a
-        INNER JOIN MaintenanceLog m ON a.assignment_id = m.assignment_id
-        GROUP BY(m.assignment_id)
-        """ 
-    )
-    rows = cur.fetchall()
-    for row in rows:
-        print(row)
+    instructions = "SELECT a.*, m.* FROM Assignment a INNER JOIN MaintenanceLog m ON a.assignment_id = m.assignment_id GROUP BY m.assignment_id"
+    am = DISPLAY_COLUMNS+["Assignment ID", "Start date", "End date", "Cost", "Result", "Review"]
+    helper.print_tables(cur, am, table_name="Finished Assignments", custom_instructions=instructions)
     cur.close()
     conn.close()

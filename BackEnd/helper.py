@@ -60,27 +60,18 @@ def sanitize_input(inp, numbers_only = False, date_mode = False, no_spaces = Fal
                 return False
         return True
 
-def print_tables(cur, table_name = None, where = None):
+def print_tables(cur, columns, table_name, where = None, custom_instructions=None):
     #Prints tables
-    if table_name is not None:
-        print(f"{table_name}:")
-        if where is None: 
-            cur.execute(f"SELECT * FROM `{table_name}`")
-        else:
-            cur.execute(f"SELECT * FROM `{table_name}` WHERE {where}")
-        table_info = cur.fetchall()
-        print(table_viewer(table_name, table_info))
-        print()
+    print(f"{table_name}:")
+    if where is not None:
+        cur.execute(f"SELECT * FROM `{table_name}` WHERE {where}")
+    elif custom_instructions is not None:
+        cur.execute(custom_instructions)
     else:
-        for table in TABLES:
-            print(f"{table}:")
-            if where is None: 
-                cur.execute(f"SELECT * FROM `{table}`")
-            else: 
-                cur.execute(f"SELECT * FROM `{table}` WHERE {where}")
-            table_info = cur.fetchall()
-            print(table_viewer(table, table_info))
-            print("\n\n\n")
+        cur.execute(f"SELECT * FROM `{table_name}`")
+    table_info = cur.fetchall()
+    print(table_viewer(table_name, table_info, columns))
+    print()
 
 def basic_values(table):
     match table:
@@ -139,183 +130,32 @@ def basic_values(table):
             """
 
 
-def table_viewer(table, table_info):
+
+def table_viewer(table, table_info, columns):
     table_info = [[str(col) for col in row] for row in table_info] #Convert everything to string
     returner = ""
-    match table:
-        case "Infrastructure":
-            widest_id = 0 #Gets the widest entry of each column, will be used to know the minimum amount of space needed when formatting
-            widest_type = 0
-            widest_location = 0
-            widest_install_date = 0
-            widest_last_inspection = 0
-            widest_state = 0
-            for id, type, location, install_date, last_inspection, state in table_info:
-                if len(id)>widest_id:
-                    widest_id = len(id)               
-                if len(type)>widest_type:
-                    widest_type = len(type)
-                if len(location)>widest_location:
-                    widest_location = len(location)
-                if len(install_date)>widest_install_date:
-                    widest_install_date = len(install_date)
-                if len(last_inspection)>widest_last_inspection:
-                    widest_last_inspection = len(last_inspection)
-                if len(state)>widest_state:
-                    widest_state = len(state)
-            returner = (
-                f"{'ID':<{len('id') + widest_id}}  " #Formatting the header so that everything is properly aligned
-                f"{'Type':<{len('type') + widest_type}}  "
-                f"{'Location':<{len('location') + widest_location}}  "
-                f"{'Install date':<{len('install date') + widest_install_date}}  "
-                f"{'Last inspection':<{len('last inspection') + widest_last_inspection}}  "
-                f"State\n"
-                )
-            returner += "-"*( #Just adds a "-----" divider between the header and the actual entries
-                    (len('id') + widest_id) + 2 + 
-                    (len('type') + widest_type) + 2 +
-                    (len('location') + widest_location) + 2 +
-                    (len('install date') + widest_install_date) + 2 +
-                    (len('last inspection') + widest_last_inspection) + 2 +
-                    len('State')
-                )
-            for id, type, location, install_date, last_inspection, state in table_info: #Actually adding the entries now with proper alignment
-                returner += f"\n{id:<{len('id') + widest_id}}  "
-                returner += f"{type:<{len('type') + widest_type}}  "
-                returner += f"{location:<{len('location') + widest_location}}  "
-                returner += f"{install_date:<{len('install date') + widest_install_date}}  "
-                returner += f"{last_inspection:<{len('last inspection') + widest_last_inspection}}  "
-                returner += state
 
-        case "Contractor": #Very bad DRY, but idk how to do the for-loops since each table has a different amount of attributes to them
-            widest_id = 0
-            widest_name = 0
-            widest_rating = 0
-            widest_field = 0
-            widest_cost = 0
-            for id, name, rating, field, cost in table_info:
-                if len(id)>widest_id:
-                    widest_id = len(id)
-                if len(name)>widest_name:
-                    widest_name = len(name)
-                if len(rating)>widest_rating:
-                    widest_rating = len(rating)
-                if len(field)>widest_field:
-                    widest_field = len(field)
-                if len(cost)>widest_cost:
-                    widest_cost = len(cost)
-            returner = (
-                f"{'ID':<{len('id') + widest_id}}  "
-                f"{'Name':<{len('name') + widest_name}}  "
-                f"{'Rating':<{len('rating') + widest_rating}}  "
-                f"{'Field':<{len('field') + widest_field}}  "
-                f"Cost\n"
-                )
-            returner += "-"*(
-                    (len('id') + widest_id) + 2 + 
-                    (len('name') + widest_name) + 2 +
-                    (len('rating') + widest_rating) + 2 +
-                    (len('field') + widest_field) + 2 +
-                    len('Cost')
-                )
-            for id, name, rating, field, cost in table_info:
-                returner += f"\n{id:<{len('id') + widest_id}}  "
-                returner += f"{name:<{len('name') + widest_name}}  "
-                returner += f"{rating:<{len('rating') + widest_rating}}  "
-                returner += f"{field:<{len('field') + widest_field}}  "
-                returner += cost
+    max_lengths = []
+    for col in columns: #Minimum space needed
+        max_lengths.append(len(col))
 
-        case "Assignment":
-            widest_id = 0
-            widest_infrastructure_id = 0
-            widest_contractor_id = 0
-            widest_task_type = 0
-            widest_projected_cost = 0
-            widest_projected_start_date = 0
-            widest_projected_end_date = 0
-            for id, infrastructure_id, contractor_id, task_type, projected_cost, projected_start_date, projected_end_date in table_info:
-                if len(id)>widest_id:
-                    widest_id = len(id)               
-                if len(infrastructure_id)>widest_infrastructure_id:
-                    widest_infrastructure_id = len(infrastructure_id)
-                if len(contractor_id)>widest_contractor_id:
-                    widest_contractor_id = len(contractor_id)
-                if len(task_type)>widest_task_type:
-                    widest_task_type = len(task_type)
-                if len(projected_cost)>widest_projected_cost:
-                    widest_projected_cost = len(projected_cost)
-                if len(projected_start_date)>widest_projected_start_date:
-                    widest_projected_start_date = len(projected_start_date)
-                if len(projected_end_date)>widest_projected_end_date:
-                    widest_projected_end_date = len(projected_end_date)
-            returner = (
-                f"{'ID':<{len('id') + widest_id}}  "
-                f"{'Infrastructure ID':<{len('infrastructure id') + widest_infrastructure_id}}  "
-                f"{'Contractor ID':<{len('contractor id') + widest_contractor_id}}  "
-                f"{'Task type':<{len('task type') + widest_task_type}}  "
-                f"{'Projected cost':<{len('projected cost') + widest_projected_cost}}  "
-                f"{'Projected start date':<{len('projected start date') + widest_projected_start_date}}  "
-                f"Projected end date\n"
-                )
-            returner += "-"*(
-                    (len('id') + widest_id) + 2 +
-                    (len('infrastructure id') + widest_infrastructure_id) + 2 +
-                    (len('contractor id') + widest_contractor_id) + 2 +
-                    (len('task type') + widest_task_type) + 2 +
-                    (len('projected cost') + widest_projected_cost) + 2 +
-                    (len('projected start date') + widest_projected_start_date) + 2 +
-                    len('Projected end date')
-                )
-            for id, infrastructure_id, contractor_id, task_type, projected_cost, projected_start_date, projected_end_date in table_info:
-                returner += f"\n{id:<{len('id') + widest_id}}  "
-                returner += f"{infrastructure_id:<{len('infrastructure id') + widest_infrastructure_id}}  "
-                returner += f"{contractor_id:<{len('contractor id') + widest_contractor_id}}  "
-                returner += f"{task_type:<{len('task type') + widest_task_type}}  "
-                returner += f"{projected_cost:<{len('projected cost') + widest_projected_cost}}  "
-                returner += f"{projected_start_date:<{len('projected start date') + widest_projected_start_date}}  "
-                returner += projected_end_date
+    for row in table_info: #Getting amount of spaces needed
+        for i, column_value in enumerate(row):
+            length = len(column_value)
+            if length > max_lengths[i]:
+                max_lengths[i] = length
 
-        case "MaintenanceLog":
-            widest_assignment_id = 0
-            widest_start_date = 0
-            widest_end_date = 0
-            widest_cost = 0
-            widest_result = 0
-            widest_review = 0
-            for assignment_id, start_date, end_date, cost, result, review in table_info:
-                if len(assignment_id)>widest_assignment_id:
-                    widest_assignment_id = len(assignment_id)               
-                if len(start_date)>widest_start_date:
-                    widest_start_date = len(start_date)
-                if len(end_date)>widest_end_date:
-                    widest_end_date = len(end_date)
-                if len(cost)>widest_cost:
-                    widest_cost = len(cost)
-                if len(result)>widest_result:
-                    widest_result = len(result)
-                if len(review)>widest_review:
-                    widest_review = len(review)
-            returner = (
-                f"{'Assignment ID':<{len('assignment id') + widest_assignment_id}}  "
-                f"{'Start date':<{len('start date') + widest_start_date}}  "
-                f"{'End date':<{len('end date') + widest_end_date}}  "
-                f"{'Cost':<{len('cost') + widest_cost}}  "
-                f"{'Result':<{len('result') + widest_result}}  "
-                f"Review\n"
-                )
-            returner += "-"*(
-                    (len('assignment id') + widest_assignment_id) + 2 +
-                    (len('start date') + widest_start_date) + 2 +
-                    (len('end date') + widest_end_date) + 2 +
-                    (len('cost') + widest_cost) + 2 +
-                    (len('result') + widest_result) + 2 +
-                    len('Review')
-                )
-            for assignment_id, start_date, end_date, cost, result, review in table_info:
-                returner += f"\n{assignment_id:<{len('assignment id') + widest_assignment_id}}  "
-                returner += f"{start_date:<{len('start date') + widest_start_date}}  "
-                returner += f"{end_date:<{len('end date') + widest_end_date}}  "
-                returner += f"{cost:<{len('cost') + widest_cost}}  "
-                returner += f"{result:<{len('result') + widest_result}}  "
-                returner += review
+    for formatting in range(len(columns)): #Building columns
+        returner += f"{columns[formatting]:<{max_lengths[formatting]}}    "
+    returner += "\n"
+    
+    for divider in max_lengths: #Getting divider
+        returner += "-" * (divider + 4) 
+    returner += "\n"    
+    
+    for row_adder in table_info: #Adding rows
+        for i, column_value in enumerate(row_adder):
+            returner += f"{column_value:<{max_lengths[i]}}    "
+        returner += "\n"
+
     return returner

@@ -3,6 +3,7 @@ from BackEnd import helper as helper
 
 
 VALID_COLUMNS = {"name", "rating", "field", "cost"}
+DISPLAY_COLUMNS = ["ID", "Name", "Rating", "Field", "Cost"]
 
 
 def method_picker(method, cur):
@@ -172,6 +173,6 @@ def DRY(method):
     elif result == 0:
         print("No data was found.")
     elif result == 1:  
-        helper.print_tables(cur, "Contractor", f"{method} = {data}")
+        helper.print_tables(cur, DISPLAY_COLUMNS, table_name="Contractor", where=f"{method} = {data}")
     cur.close()
     conn.close()

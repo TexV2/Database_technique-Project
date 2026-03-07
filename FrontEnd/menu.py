@@ -7,6 +7,12 @@ from BackEnd import helper as helper
 
 
 
+INFRASTRUCTURE_DISPLAY_COLUMNS = ["ID", "Type", "Location", "Install date", "Last inspection", "State"]
+CONTRACTOR_DISPLAY_COLUMNS = ["ID", "Name", "Rating", "Field", "Cost"]
+ASSIGNMENT_DISPLAY_COLUMNS =  ["ID", "Infrastructure ID", "Contractor ID", "Task type", "Projected cost", "Projected start date", "Projected end date"]
+MAINTENANCE_LOG_DISPLAY_COLUMNS =  ["Assignment ID", "Start date", "End date", "Cost", "Result", "Review"]
+
+
 def infrastructure_submenu(menu_choice):
     while True:
         match menu_choice:
@@ -149,8 +155,7 @@ def log_submenu(menu_choice):
                 return log.add_log()
             case 3:
                 log.view_log_between_dates()
-                input("Press enter to continue")
-                return True
+                return False
             case 4:
                 print("\nChoose Search Method:")
                 print("1) ID")
@@ -295,7 +300,10 @@ def schema_menu():
             case "2":
                 conn = schema.get_connection()
                 curr = conn.cursor()
-                helper.print_tables(curr)
+                helper.print_tables(curr, INFRASTRUCTURE_DISPLAY_COLUMNS, table_name="Infrastructure")
+                helper.print_tables(curr, CONTRACTOR_DISPLAY_COLUMNS, table_name="Contractor")
+                helper.print_tables(curr, ASSIGNMENT_DISPLAY_COLUMNS, table_name="Assignment")
+                helper.print_tables(curr, MAINTENANCE_LOG_DISPLAY_COLUMNS, table_name="MaintenanceLog")
                 conn.close()
                 curr.close()
             case "b":
@@ -323,7 +331,7 @@ def infrastructure_menu():
                 conn = schema.get_connection()
                 cur = conn.cursor()
                 print()
-                helper.print_tables(cur, "Infrastructure")
+                helper.print_tables(cur, INFRASTRUCTURE_DISPLAY_COLUMNS, table_name="Infrastructure")
             case "2":
                 skip = infrastructure_submenu(2)
             case "3":
@@ -359,7 +367,7 @@ def log_menu():
                 conn = schema.get_connection()
                 cur = conn.cursor()
                 print()
-                helper.print_tables(cur, "MaintenanceLog")
+                helper.print_tables(cur, MAINTENANCE_LOG_DISPLAY_COLUMNS, table_name="MaintenanceLog")
             case "2":
                 skip = log_submenu(2)
             case "3":
@@ -397,7 +405,7 @@ def contractor_menu():
                 conn = schema.get_connection()
                 cur = conn.cursor()
                 print()
-                helper.print_tables(cur, "Contractor")
+                helper.print_tables(cur, CONTRACTOR_DISPLAY_COLUMNS, table_name="Contractor")
             case "2":
                 skip = contractor_submenu(2)
             case "3":
@@ -436,7 +444,7 @@ def assignment_menu():
                 conn = schema.get_connection()
                 cur = conn.cursor()
                 print()
-                helper.print_tables(cur, "Assignment")
+                helper.print_tables(cur, ASSIGNMENT_DISPLAY_COLUMNS, table_name="Assignment")
             case "2":
                 skip = assignment_submenu(2)
             case "3":

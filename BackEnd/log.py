@@ -4,7 +4,7 @@ from BackEnd import assignments as assignment
 
 
 VALID_COLUMNS = {"start_date", "end_date", "cost", "result", "review"}
-
+DISPLAY_COLUMNS = ["Assignment ID", "Start date", "End date", "Cost", "Result", "Review"]
 
 
 def method_picker(method, cur):
@@ -113,7 +113,7 @@ def view_log_between_dates():
     if accepted_input:
         conn = schema.get_connection()
         cur = conn.cursor()
-        helper.print_tables(cur, table_name="MaintenanceLog", where=f"start_date >= '{start_date}' AND end_date <= '{end_date}'")
+        helper.print_tables(cur, DISPLAY_COLUMNS, table_name="MaintenanceLog", where=f"start_date >= '{start_date}' AND end_date <= '{end_date}'")
         cur.close()
         conn.close()
         return True
@@ -189,6 +189,6 @@ def DRY(method):
     elif result == 0:
         print("No data was found.")
     elif result == 1:  
-        helper.print_tables(cur, "MaintenanceLog", f"{method} = {data}")
+        helper.print_tables(cur, DISPLAY_COLUMNS, table_name="MaintenanceLog", where=f"{method} = {data}")
     cur.close()
     conn.close()

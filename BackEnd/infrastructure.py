@@ -3,7 +3,7 @@ from BackEnd import helper as helper
 
 
 VALID_COLUMNS = {"type", "location", "state", "last_inspection"}
-
+DISPLAY_COLUMNS = ["ID", "Type", "Location", "Install date", "Last inspection", "State"]
 
 def method_picker(method, cur):
     conversion = {
@@ -160,6 +160,6 @@ def DRY(method):
     elif result == 0:
         print("No data was found.")
     elif result == 1:  
-        helper.print_tables(cur, "Infrastructure", f"{method} = {data}")
+        helper.print_tables(cur, columns=DISPLAY_COLUMNS, table_name="Infrastructure", where=f"{method} = {data}")
     cur.close()
     conn.close()

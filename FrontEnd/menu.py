@@ -71,6 +71,8 @@ def infrastructure_submenu(menu_choice):
                     else:
                         print("Invalid input, please try again later")
                         return False
+            case 6:
+                return log.show_infrastructure_summary()
         input("\nPress enter to continue...")
 
 
@@ -324,6 +326,7 @@ def infrastructure_menu():
         print("3) Search & Filter")
         print("4) Update Infrastructure")
         print("5) Remove Infrastructure")
+        print("6) Show Infrastructure summary")
         print("b) Go back")
         choice = input("--> ").lower().strip()
         match choice:
@@ -340,6 +343,8 @@ def infrastructure_menu():
                 skip = infrastructure_submenu(4)
             case "5":
                 skip = infrastructure_submenu(5)
+            case "6":
+                skip = infrastructure_submenu(6)
             case "b":
                 print ("Going back to main menu. ")
                 return True

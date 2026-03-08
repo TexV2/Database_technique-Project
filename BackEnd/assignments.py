@@ -203,10 +203,25 @@ def DRY(method):
     conn.close()
 
 def show_finished_assignments():
-    conn=schema.get_connection()
+    conn = schema.get_connection()
     cur = conn.cursor()
-    instructions = "SELECT a.*, m.* FROM Assignment a INNER JOIN MaintenanceLog m ON a.assignment_id = m.assignment_id GROUP BY m.assignment_id"
-    am = DISPLAY_COLUMNS+["Assignment ID", "Start date", "End date", "Cost", "Result", "Review"]
-    helper.print_tables(cur, am, table_name="Finished Assignments", custom_instructions=instructions)
+    cur.execute("""
+        SELECT 
+            a.assignment_id,
+            a.infrastructure_id,
+            a.contractor_id,
+            a.task_type,
+            m.start_date,
+            m.end_date,
+            m.cost,
+            m.result,
+            m.review
+        FROM MaintenanceLog m
+        JOIN Assignment a ON a.assignment_id = m.assignment_id
+    """)
+    rows = cur.fetchall()
+    columns = ["Assignment ID", "Infrastructure ID", "Contractor ID", "Task Type", "Start Date", "End Date", "Cost", "Result", "Review"]
+    print("Finished Assignments:")
+    print(helper.table_viewer(rows, columns))
     cur.close()
     conn.close()

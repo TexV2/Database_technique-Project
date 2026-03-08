@@ -6,9 +6,9 @@ import mysql.connector
 DB_NAME = "InfrastructureMaintenance" #helper.sanitize_input("Example", True) #Can put whatever here of course, but this gets the message across
 TABLES = ["Infrastructure", "Contractor", "Assignment", "MaintenanceLog"]
 COLUMNS = [["ID", "Type", "Location", "Install date", "Last inspection", "State"], 
-           ["ID", "Name", "Rating", "Field", "Cost"],
-           ["ID", "Infrastructure ID", "Contractor ID", "Task type", "Projected cost", "Projected start date", "Projected end date"],
-           ["Assignment ID", "Start date", "End date", "Cost", "Result", "Review"]]
+        ["ID", "Name", "Rating", "Field", "Cost"],
+        ["ID", "Infrastructure ID", "Contractor ID", "Task type", "Projected cost", "Projected start date", "Projected end date"],
+        ["Assignment ID", "Start date", "End date", "Cost", "Result", "Review"]]
 def get_name():
     return DB_NAME
 
